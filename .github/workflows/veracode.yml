@@ -30,7 +30,13 @@ jobs:
       with:
         java-version: 8
         distribution: 'temurin'
-    - run: java -jar pipeline-scan.jar --veracode_api_id "${{secrets.VERACODE_API_ID}}" --veracode_api_key "${{secrets.VERACODE_API_KEY}}" --fail_on_severity="Very High, High" --file veracode-scan-target.zip
+
+    - run: |
+        java -jar pipeline-scan.jar \
+        --veracode_api_id "${{secrets.VERACODE_API_ID}}" \
+        --veracode_api_key "${{secrets.VERACODE_API_KEY}}" \
+        --fail_on_severity="Very High, High" \
+        --file veracode-scan-target.zip
       continue-on-error: true
 
     # New step to validate results.json file
@@ -49,6 +55,7 @@ jobs:
       uses: veracode/veracode-pipeline-scan-results-to-sarif@ff08ae5b45d5384cb4679932f184c013d34da9be
       with:
         pipeline-results-json: results.json
+
     - uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: veracode-results.sarif
