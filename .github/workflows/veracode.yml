@@ -39,7 +39,9 @@ jobs:
         --file veracode-scan-target.zip
       continue-on-error: true
 
-    # New step to validate results.json file
+    - name: List Directory Contents
+      run: ls -l
+
     - name: Validate results.json
       run: |
         if ! jq empty results.json; then
