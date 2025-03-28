@@ -33,7 +33,14 @@ jobs:
     - run: java -jar pipeline-scan.jar --veracode_api_id "${{secrets.VERACODE_API_ID}}" --veracode_api_key "${{secrets.VERACODE_API_KEY}}" --fail_on_severity="Very High, High" --file veracode-scan-target.zip
       continue-on-error: true
 
-    # New step to inspect results.json file
+    # New step to validate results.json file
+    - name: Validate results.json
+      run: |
+        if ! jq empty results.json; then
+          echo "Invalid JSON in results.json"
+          exit 1
+        fi
+
     - name: Inspect results.json
       run: cat results.json || echo "results.json not found or invalid JSON"
 
