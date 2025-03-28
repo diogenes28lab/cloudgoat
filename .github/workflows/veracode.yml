@@ -44,6 +44,10 @@ jobs:
 
     - name: Validate results.json
       run: |
+        if ! [ -f results.json ]; then
+          echo "results.json not found"
+          exit 1
+        fi
         if ! jq empty results.json; then
           echo "Invalid JSON in results.json"
           exit 1
